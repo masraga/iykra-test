@@ -6,13 +6,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-func init(){
+func init() {
 	config.LoadConfig()
 }
 
 func main() {
 	host := viper.GetString("HOST")
 	port := viper.GetInt("PORT")
+
 	server := server.NewServer(host, port)
 	server.Start()
 }
