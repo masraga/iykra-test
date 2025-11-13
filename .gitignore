@@ -1,0 +1,5 @@
+# environtment variable
+.env
+
+#builds
+build/
