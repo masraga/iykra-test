@@ -18,9 +18,9 @@ func NewRouter(e *echo.Echo, db config.DatabaseInterface) *Router {
 func (r *Router) Register() {
 	employeeHandler := handler.NewEmployeeHandler(r.E, r.Db)
 
-	r.E.POST("/employee", employeeHandler.CreateEmployee)
-	r.E.GET("/employee", employeeHandler.GetAllEmployees)
-	r.E.GET("/employee/:id", employeeHandler.GetEmployeeByID)
-	r.E.PUT("/employee/:id", employeeHandler.UpdateEmployee)
-	r.E.DELETE("/employee/:id", employeeHandler.DeleteEmployee)
+	r.E.POST("/employees", employeeHandler.CreateEmployee)
+	r.E.GET("/employees", employeeHandler.GetAllEmployees)
+	r.E.GET("/employees/:id", employeeHandler.GetEmployeeByID)
+	r.E.PUT("/employees/:id", employeeHandler.UpdateEmployee)
+	r.E.DELETE("/employees/:id", employeeHandler.DeleteEmployee)
 }
