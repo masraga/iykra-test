@@ -20,4 +20,6 @@ func (r *Router) Register() {
 
 	api := r.E.Group("/api")
 	api.POST("/employee", employeeHandler.CreateEmployee)
+	api.GET("/employee", employeeHandler.GetAllEmployees)
+	api.GET("/employee/:id", employeeHandler.GetEmployeeByID)
 }

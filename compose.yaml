@@ -11,6 +11,8 @@ services:
       - DB_NAME=iykra-test
     ports:
       - '3000:3000'
+    volumes:
+      - .:/app
   db:
     container_name: posgres-db
     image: postgres:16

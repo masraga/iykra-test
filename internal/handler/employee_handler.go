@@ -42,3 +42,42 @@ func (h *EmployeeHandler) CreateEmployee(e echo.Context) error {
 		"msg":    "user created successfully",
 	})
 }
+
+func (h *EmployeeHandler) GetAllEmployees(e echo.Context) error {
+	employess, err := h.EmployeeUsecase.GetAll()
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, map[string]interface{}{
+			"status": http.StatusBadRequest,
+			"msg":    err.Error(),
+		})
+	}
+
+	if employess == nil {
+		return e.JSON(http.StatusOK, map[string]interface{}{
+			"status": http.StatusOK,
+			"msg":    "no employees found",
+			"data":   []interface{}{},
+		})
+	}
+	return e.JSON(http.StatusOK, map[string]interface{}{
+		"status": http.StatusOK,
+		"data":   employess,
+	})
+}
+
+func (h *EmployeeHandler) GetEmployeeByID(e echo.Context) error {
+	id := e.Param("id")
+
+	employee, err := h.EmployeeUsecase.GetByID(id)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, map[string]interface{}{
+			"status": http.StatusBadRequest,
+			"msg":    err.Error(),
+		})
+	}
+
+	return e.JSON(http.StatusOK, map[string]interface{}{
+		"status": http.StatusOK,
+		"data":   employee,
+	})
+}

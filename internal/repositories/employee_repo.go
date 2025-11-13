@@ -12,6 +12,8 @@ import (
 
 type EmployeeRepo interface {
 	Create(employeeData *domain.Employee) error
+	GetAll() (*[]domain.Employee, error)
+	GetByID(id string) (*domain.Employee, error)
 }
 
 type employeeRepo struct {
@@ -32,4 +34,37 @@ func (r *employeeRepo) Create(employeeData *domain.Employee) error {
 		return err.Err()
 	}
 	return nil
+}
+
+func (r *employeeRepo) GetAll() (*[]domain.Employee, error) {
+	var employees []domain.Employee
+	query := fmt.Sprintf("SELECT id, name, position, salary FROM %s", r.Name)
+	rows, err := r.Db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var emp domain.Employee
+		if err := rows.Scan(&emp.ID, &emp.Name, &emp.Position, &emp.Salary); err != nil {
+			return nil, err
+		}
+		employees = append(employees, emp)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return &employees, nil
+}
+
+func (r *employeeRepo) GetByID(id string) (*domain.Employee, error) {
+	var emp domain.Employee
+	query := fmt.Sprintf("SELECT id, name, position, salary FROM %s WHERE id=$1", r.Name)
+	if err := r.Db.QueryRow(query, id).Scan(&emp.ID, &emp.Name, &emp.Position, &emp.Salary); err != nil {
+		return nil, err
+	}
+	return &emp, nil
 }
