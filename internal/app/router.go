@@ -22,4 +22,6 @@ func (r *Router) Register() {
 	api.POST("/employee", employeeHandler.CreateEmployee)
 	api.GET("/employee", employeeHandler.GetAllEmployees)
 	api.GET("/employee/:id", employeeHandler.GetEmployeeByID)
+	api.PUT("/employee/:id", employeeHandler.UpdateEmployee)
+	api.DELETE("/employee/:id", employeeHandler.DeleteEmployee)
 }

@@ -81,3 +81,42 @@ func (h *EmployeeHandler) GetEmployeeByID(e echo.Context) error {
 		"data":   employee,
 	})
 }
+
+func (h *EmployeeHandler) UpdateEmployee(e echo.Context) error {
+	id := e.Param("id")
+	var req *dto.UpdateEmployeeRequest
+	if err := e.Bind(&req); err != nil {
+		return e.JSON(http.StatusBadRequest, map[string]interface{}{
+			"status": http.StatusBadRequest,
+			"msg":    err.Error(),
+		})
+	}
+
+	if err := h.EmployeeUsecase.Update(id, req); err != nil {
+		return e.JSON(http.StatusBadRequest, map[string]interface{}{
+			"status": http.StatusBadRequest,
+			"msg":    err.Error(),
+		})
+	}
+
+	return e.JSON(http.StatusOK, map[string]interface{}{
+		"status": http.StatusOK,
+		"msg":    "employee updated successfully",
+	})
+}
+
+func (h *EmployeeHandler) DeleteEmployee(e echo.Context) error {
+	id := e.Param("id")
+
+	if err := h.EmployeeUsecase.Delete(id); err != nil {
+		return e.JSON(http.StatusBadRequest, map[string]interface{}{
+			"status": http.StatusBadRequest,
+			"msg":    err.Error(),
+		})
+	}
+
+	return e.JSON(http.StatusOK, map[string]interface{}{
+		"status": http.StatusOK,
+		"msg":    "employee deleted successfully",
+	})
+}

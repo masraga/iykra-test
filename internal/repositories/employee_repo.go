@@ -8,12 +8,15 @@ import (
 
 	"github.com/masraga/iykra-test/config"
 	"github.com/masraga/iykra-test/internal/domain"
+	"github.com/masraga/iykra-test/internal/dto"
 )
 
 type EmployeeRepo interface {
 	Create(employeeData *domain.Employee) error
 	GetAll() (*[]domain.Employee, error)
 	GetByID(id string) (*domain.Employee, error)
+	Update(id string, payload *dto.UpdateEmployeeRequest) error
+	Delete(id string) error
 }
 
 type employeeRepo struct {
@@ -67,4 +70,33 @@ func (r *employeeRepo) GetByID(id string) (*domain.Employee, error) {
 		return nil, err
 	}
 	return &emp, nil
+}
+
+func (r *employeeRepo) Update(id string, payload *dto.UpdateEmployeeRequest) error {
+	employee, err := r.GetByID(id)
+	if err != nil {
+		return err
+	}
+	if payload.Name == "" {
+		payload.Name = employee.Name
+	}
+	if payload.Position == "" {
+		payload.Position = employee.Position
+	}
+	if payload.Salary == 0 {
+		payload.Salary = employee.Salary
+	}
+	query := fmt.Sprintf("UPDATE %s SET name=$1, position=$2, salary=$3 WHERE id=$4", r.Name)
+	if _, err := r.Db.Exec(query, payload.Name, payload.Position, payload.Salary, id); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *employeeRepo) Delete(id string) error {
+	query := fmt.Sprintf("DELETE FROM %s WHERE id=$1", r.Name)
+	if _, err := r.Db.Exec(query, id); err != nil {
+		return err
+	}
+	return nil
 }

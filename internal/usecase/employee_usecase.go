@@ -10,6 +10,8 @@ type EmployeeUsecase interface {
 	Create(employeeData *dto.CreateEmployeeRequest) error
 	GetAll() (*[]domain.Employee, error)
 	GetByID(id string) (*domain.Employee, error)
+	Update(id string, payload *dto.UpdateEmployeeRequest) error
+	Delete(id string) error
 }
 
 type employeeUsecase struct {
@@ -34,4 +36,20 @@ func (u *employeeUsecase) GetAll() (*[]domain.Employee, error) {
 
 func (u *employeeUsecase) GetByID(id string) (*domain.Employee, error) {
 	return u.employeeRepo.GetByID(id)
+}
+
+func (u *employeeUsecase) Update(id string, payload *dto.UpdateEmployeeRequest) error {
+	_, err := u.employeeRepo.GetByID(id)
+	if err != nil {
+		return err
+	}
+	
+	if err := u.employeeRepo.Update(id, payload); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *employeeUsecase) Delete(id string) error {
+	return u.employeeRepo.Delete(id)
 }
