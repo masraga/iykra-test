@@ -5,6 +5,8 @@ WORKDIR /app
 COPY . .
 
 RUN go mod download
-RUN go install github.com/air-verse/air@latest
+# RUN go install github.com/air-verse/air@latest
 
-CMD ["air"]
+RUN go build -o tmp/main cmd/main.go
+
+CMD ["tmp/main"]
